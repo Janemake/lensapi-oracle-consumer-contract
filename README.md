@@ -1,149 +1,169 @@
-# Polygon Consumer Contract for LensAPI Oracle
-![](./assets/Phat-Contract-Logo.png)
-- [Overview](#overview)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-  - [Environment Variables](#environment-variables)
-- [Deployment](#deployment)
-  - [Deploy to Polygon Mumbai Testnet](#deploy-to-polygon-mumbai-testnet)
-    - [Verify Contract on Polygon Mumabai Testnet](#verify-contract-on-polygon-mumbai-testnet)
-    - [Interact with Consumer Contract on Polygon Mumbai](#interact-with-consumer-contract-on-polygon-mumbai)
-  - [Deploy to Polygon Mainnet](#deploy-to-polygon-mainnet)
-    - [Verify Contract on Polygon Mainnet](#verify-contract-on-polygon-mainnet)
-    - [Interact with Consumer Contract on Polygon Mainnet](#interact-with-consumer-contract-on-polygon-mainnet)
-- [Closing](#closing)
+# :hammer_and_pick: The Phat Contract Starter Kit
+> ### <center>:rotating_light: <u>**Warning**</u> :rotating_light:</center>
+>
+> For the **LensAPI Oracle** specific documentation, check out the guide in [`LENSAPI_ORACLE.md`](./LENSAPI_ORACLE.md). The rest of this `README.md` file will be based on the Phat Contract Start Kit.
+>
 
-## Overview
-This project represents a basic Polygon Consumer Contract that is compatible with a deployed LensAPI Oracle via [Phat Bricks UI](https://bricks.phala.network).
+> <u>**Note on Terminology**</u>
+> 
+> **Phat Contract** will also be referred to as the **Phala Oracle** in this `README`.
 
-## Prerequisites
-- Active deployed LensAPI Oracle Blueprint via [Phat Bricks](https://bricks.phala.network)
-- Address of the "[Oracle Endpoint](https://docs.phala.network/developers/bricks-and-blueprints/featured-blueprints/lensapi-oracle#step-3-connect-your-smart-contract-to-the-oracle)" in deployed LensAPI Oracle
-- [Hardhat](https://hardhat.org)
-- For Polygon Mainnet deployments:
-  - Polygonscan API Key that can be generated on [polygonscan](https://polygonscan.com)
-- RPC Endpoint for Polygon Mainnet & Mumbai Testnet
-  - [Alchemy](https://alchemy.com) - This repo example uses Alchemy's API Key.
-  - [Infura](https://infura.io)
-  - Personal RPC Node
+## :mag_right: Overview
+The Phat Contract Starter Kit is your one-stop solution to connect any API to your smart contract. It offers wide-ranging support for all EVM-compatible blockchains, including but not limited to Ethereum, Polygon, Arbitrum, Avalanche, Binance Smart Chain, Optimism, and zkSync.
 
-## Getting Started
-First you will need to run `cp .env.local .env` to copy over the local environment variables.
-### Environment Variables:
-- `MUMBAI_RPC_URL` - JSON-RPC URL with an API key for RPC endpoints on Polygon Mumbai Testnet (e.g. [Alchemy](https://alchemy.com) `https://polygon-mumbai.g.alchemy.com/v2/<api-key>`, [Infura](https://infura.io) `https://polygon.infura.io/v3/<api-key>`).
-- `POLYGON_RPC_URL` - JSON-RPC URL with an API key for RPC endpoints on Polygon Mainnet (e.g. [Alchemy](https://alchemy.com) `https://polygon.g.alchemy.com/v2/<api-key>`, [Infura](https://infura.io) `https://polygon.infura.io/v3/<api-key>`).
-- `DEPLOYER_PRIVATE_KEY` - Secret key for the deployer account that will deploy the Consumer Contract on either Polygon Mainnet or Polygon Mumbai Testnet.
-- `POLYGONSCAN_API_KEY` - Polygonscan API Key that can be generated at [polygonscan](https://polygonscan.com).
-- `MUMBAI_LENSAPI_ORACLE_ENDPOINT` - LensAPI Oracle Endpoint Address that can be found in the dashboard of the deployed LensAPI Oracle Blueprint at [Phala PoC5 Testnet](https://bricks-poc5.phala.network) for Polygon Mumbai Testnet.
-- `POLYGON_LENSAPI_ORACLE_ENDPOINT` - LensAPI Oracle Endpoint Address that can be found in the dashboard of the deployed LensAPI Oracle Blueprint at [Phala Mainnet](https://bricks.phala.network) for Polygon Mainnet.
+![](./assets/case-self-owned-oracles.jpg)
 
-## Deployment
-Now that you have the prerequisites to deploy a Polygon Consumer Contract on Polygon, lets begin with some initials tasks.
-### Install Dependencies & Compile Contracts
-```shell
-# install dependencies
-$ yarn
+This starter kit empowers you to initiate the data request from the smart contract side. The request is then seamlessly sent to your script for processing. You have the liberty to call any APIs to fulfill the request and define the response data structure that will be replied to your smart contract.
+## :runner: Quick Start
+To kickstart your journey with the Phat Contract Starter Kit, you have 2 options:
+1. Create a template from the [`lensapi-oracle-consumer-contract`](https://bit.ly/3runoN1) template repo. Click on the "**Use this template**" button in the top right corner of the webpage. Then skip the `npx @phala/fn init example` step.
+  ![](./assets/UseThisTemplate.png)
+2. Install the `@phala/fn` CLI tool. You can do this using your node package manager (`npm`) or use node package execute (`npx`). For the purpose of this tutorial, we will be using `npx`.
 
-# compile contracts
-$ yarn compile
-```
-### Deploy to Polygon Mumbai Testnet
-With the contracts successfully compiled, now we can begin deploying first to Polygon Mumbai Testnet. If you have not gotten `MATIC` for Mumbai Testnet then get `MATIC` from a [faucet](https://mumbaifaucet.com/).
-Ensure to save the address after deploying the Consumer Contract because this address will be use in the "[Configure Client](https://docs.phala.network/developers/bricks-and-blueprints/featured-blueprints/lensapi-oracle#step-4-configure-the-client-address)" section of Phat Bricks UI. The deployed address will also be set to the environment variable [`MUMBAI_CONSUMER_CONTRACT_ADDRESS`](./.env.local).
-```shell
-# deploy contracts to testnet mumbai
-$ yarn test-deploy
-# Deployed { consumer: '0x93891cb936B62806300aC687e12d112813b483C1' }
-
-# Check our example deployment in <https://mumbai.polygonscan.com/address/0x93891cb936B62806300aC687e12d112813b483C1>
-```
-#### Verify Contract on Polygon Mumbai Testnet
-Ensure to update the [`mumbai.arguments.ts`](./mumbai.arguments.ts) file with the constructor arguments used to instantiate the Consumer Contract. If you add additional parameters to the constructor function then make sure to update the `mumbai.arguments.ts` file.
-> **Note**: Your contract address will be different than `0x93891cb936B62806300aC687e12d112813b483C1` when verifying your contract. Make sure to get your actual contract address from the console log output after executing `yarn test-deploy`. 
-```shell
-$ yarn test-verify 0x93891cb936B62806300aC687e12d112813b483C1
-Nothing to compile
-No need to generate any newer typings.
-Successfully submitted source code for contract
-contracts/TestLensApiConsumerContract.sol.sol.sol:TestLensApiConsumerContract.sol at 0x93891cb936B62806300aC687e12d112813b483C1
-for verification on the block explorer. Waiting for verification result...
-
-Successfully verified contract TestLensApiConsumerContract.sol on Etherscan.
-https://mumbai.polygonscan.com/address/0x93891cb936B62806300aC687e12d112813b483C1#code
-Done in 8.88s.
-```
-#### Interact with Consumer Contract on Polygon Mumbai
-Test Consumer Contract on Mumbai with a few tests to check for malformed requests failures, successful requests, and set the attestor.
-```shell
-# set the attestor to the Oracle Endpoint in Phat Bricks UI
-$ yarn test-set-attestor
-Setting attestor...
-🚨NOTE🚨
-Make sure to go to your Phat Bricks 🧱 UI dashboard (https://bricks-poc5.phala.network)
-- Go to 'Configure Client' section where a text box reads 'Add Consumer Smart Contract'
-- Set value to 0x93891cb936B62806300aC687e12d112813b483C1
-Done
-✨  Done in 1.56s.
-# execute push-malformed-request
-$ yarn test-push-malformed-request
-Pushing a malformed request...
-Done
-# execute push-request
-$ yarn test-push-request
-Pushing a request...
-Done
+(Option 2) Once you have the CLI tool installed, you can create your first Phala Oracle template with the following command.
+```bash
+# Skip this step if chose option 1 or cloned this repo
+npx @phala/fn init example
 ```
 
-### Deploy to Polygon Mainnet
-Ensure to save the address after deploying the Consumer Contract because this address will be used in the "[Configure Client](https://docs.phala.network/developers/bricks-and-blueprints/featured-blueprints/lensapi-oracle#step-4-configure-the-client-address)" section of Phat Bricks UI. The deployed address will also be set to the environment variable [`POLYGON_CONSUMER_CONTRACT_ADDRESS`](./.env.local).
-> **Note**: Your contract address will be different than `0xbb0d733BDBe151dae3cEf8D7D63cBF74cCbf04C4` when verifying your contract. Make sure to get your actual contract address from the console log output after executing `yarn main-deploy`.
-```shell
-# deploy contracts to polygon mainnet
-$ yarn main-deploy
-Deploying...
-Deployed { consumer: '0xbb0d733BDBe151dae3cEf8D7D63cBF74cCbf04C4' }
-Configuring...
-Done
+<center>:rotating_light: <u><b>Note</b></u> :rotating_light:</center> 
 
-# Check our example deployment in <https://polygonscan.com/address/0xbb0d733BDBe151dae3cEf8D7D63cBF74cCbf04C4>
-```
-#### Verify Contract on Polygon Mainnet
-Ensure to update the [`polygon.arguments.ts`](./polygon.arguments.ts) file with the constructor arguments used to instantiate the Consumer Contract. If you add additional parameters to the constructor function then make sure to update the `polygon.arguments.ts` file.
-```shell
-$ yarn main-verify 0xbb0d733BDBe151dae3cEf8D7D63cBF74cCbf04C4
-Nothing to compile
-No need to generate any newer typings.
-Successfully submitted source code for contract
-contracts/TestLensApiConsumerContract.sol.sol:TestLensApiConsumerContract.sol.sol at 0xbb0d733BDBe151dae3cEf8D7D63cBF74cCbf04C4
-for verification on the block explorer. Waiting for verification result...
+> When selecting your template, elect `lensapi-oracle-consumer-contract`.
 
-Successfully verified contract TestLensApiConsumerContract.sol on Etherscan.
-https://polygonscan.com/address/0xbb0d733BDBe151dae3cEf8D7D63cBF74cCbf04C4#code
-Done in 8.88s.
+```shell
+npx @phala/fn init example
+? Please select one of the templates for your "example" project: (Use arrow keys)
+   phat-contract-starter-kit. The Phat Contract Starter Kit 
+❯  lensapi-oracle-consumer-contract. Polygon Consumer Contract for LensAPI Oracle 
 ```
 
-#### Interact with Consumer Contract on Polygon Mainnet
-Execute Scripts to Consumer Contract on Polygon Mainnet. The Consumer Contract on Polygon Mainnet with a few actions to mimic a malformed request, successful requests, and set the attestor.
-```shell
-# set the attestor to the Oracle Endpoint in Phat Bricks UI
-$ yarn main-set-attestor
-Setting attestor...
-🚨NOTE🚨
-Make sure to set the Consumer Contract Address in your Phat Bricks 🧱 UI dashboard (https://bricks-poc5.phala.network)
-- Go to 'Configure Client' section where a text box reads 'Add Consumer Smart Contract'
-- Set value to 0xbb0d733BDBe151dae3cEf8D7D63cBF74cCbf04C4
-Done
-✨  Done in 1.56s.
-# execute push-malformed-request
-$ yarn main-push-malformed-request
-Pushing a malformed request...
-Done
-# execute push-request
-$ yarn main-push-request
-Pushing a request...
-Done
+:stop_sign: **Not so fast!** What is it exactly that we are building? :stop_sign:
+
+> **What are we building?** 
+>
+> The artifact we are compiling is a JavaScript file, serving as the Phat Contract Oracle's tailored logic. This script is designed to respond to requests initiated from the Consumer Contract. The diagram provided above offers a visual representation of this request-response interaction.
+> 
+> **Why is it important?**
+>
+> In the context of the off-chain environment, on-chain Smart Contracts are inherently limited. Their functionality is confined to the information available to them within the on-chain ecosystem. This limitation underscores the critical need for a secure off-chain oracle, such as the Phat Contract. This oracle is capable of fetching and transforming data, thereby enhancing the intelligence and awareness of Smart Contracts about on-chain activities. This is a pivotal step towards bridging the gap between the on-chain and off-chain worlds, making Smart Contracts not just smart, but also informed.
+>
+
+After creating a Phala Oracle template, `cd` into the new project and install the package dependencies. You can do this with the following command:
+```bash
+yarn install
+```
+Now, build the default Phala Oracle function with this command:
+```bash
+yarn build-function
 ```
 
-## Closing
-Once you have stored, the deployed address of the Consumer Contract and set the value in the "Configure Client" section of the deployed LensAPI Oracle, you will now have a basic boilerplate example of how to connect your Polygon dApp to a LensAPI Oracle Blueprint. Execute a new requests and check if your configuration is correct like below:
-![](./assets/polygonscan-ex.png)
+To simulate the expected result locally, run the Phala Oracle function now with this command:
+```bash
+yarn run-function -a 0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000043078303100000000000000000000000000000000000000000000000000000000 https://api-mumbai.lens.dev
+```
+>
+> **What are the ingredients for the `yarn run-function` command?**
+>
+> Our Phat Contract script, now fully constructed, is ready for a trial run. This simulation mirrors the live script's operation when deployed on the Phala Network.
+>
+> The command's first parameter is a HexString, representing a tuple of types `[uintCoder, bytesCoder]`. This serves as the entry function. The second parameter is a `string`, embodying the configurable secrets fed into the main function.
+>
+> The `Coders.decode` function deciphers these parameters, yielding the decoded `requestId` and `encodedReqStr`. These decoded elements then become the raw material for the rest of the custom logic within the script.
+> ```typescript 
+> export default function main(request: HexString, settings: string): HexString {
+>   console.log(`handle req: ${request}`);
+>   let requestId, encodedReqStr;
+>   try {
+>     [requestId, encodedReqStr] = Coders.decode([uintCoder, bytesCoder], request);
+>   } catch (error) {
+>     console.info("Malformed request received");
+>   }
+> // ...
+> } 
+
+<details>
+  <summary><u>How the query looks under the hood</u></summary>
+
+- HTTP Endpoint: https://api-mumbai.lens.dev
+- Profile ID: `0x01`
+- Expected Graphql Query:
+  ```graphql
+  query Profile {
+    profile(request: { profileId: "0x01" }) {
+      stats {
+          totalFollowers
+          totalFollowing
+          totalPosts
+          totalComments
+          totalMirrors
+          totalPublications
+          totalCollects
+      }
+    }
+  }
+  ```
+- Expected Output:
+  ```json
+  {
+    "data": {
+      "profile": {
+        "stats": {
+          "totalFollowers": 3361,
+          "totalFollowing": 0,
+          "totalPosts": 3,
+          "totalComments": 0,
+          "totalMirrors": 0,
+          "totalPublications": 3,
+          "totalCollects": 1597
+        }
+      }
+    }
+  }
+  ```
+</details>
+
+Finally, run the local end-to-end tests with this command. Here we will simulate locally the interaction between the Phat Contract and the Consumer Contract with hardhat.
+```bash
+yarn hardhat test
+```
+:partying_face: **Congratulations!** 
+
+You have successfully completed the quick start. For the next steps, you will learn how to deploy your Phala Oracle and connect to the consumer contract for the EVM testnet chain to start testing the request-response model live.
+
+For a deeper dive into the details, click [here](./GETTING_STARTED.md),  or continue reading to learn about the valuable features the Phala Oracle can offer to your on-chain consumer contract.
+
+---
+## :magic_wand: Features and Benefits
+
+- Wide support for all mainstream blockchains
+- **Verifiable and decentralized**: every Oracle is running on decentralized infrastructure that require no operations and can be easily verified
+![](./assets/RA-Attested-Verifiable.png)
+- **Support private data**: your Oracle state is protected by cryptography and hardware
+![](./assets/Cross-chain-e2ee.png)
+- **No extra cost**: the only cost is the gas fee of response data which is sent as a transaction
+- **High frequency**: the request is synced to Oracle within one minute, and the latency of response is only limited by blockchain’s block interval
+
+## :building_construction: Use cases & Examples
+
+You could use the Oracle to:
+- **[Create a Telegram / Discord trading bot with Phat Contract](https://bit.ly/3LGpXCq)**
+- **[Cross-chain DEX Aggregator](./assets/case-cross-chain-dex-aggregator.jpg)**
+- **[Bring Web2 services & data on-chain](./assets/case-contract-controlled-web2-service.jpg)**
+- **Web3 Social Integrations**
+  - **[LensAPI Oracle](https://bit.ly/3runoN1)**
+  - **[Lens Phite](https://bit.ly/3RG9OR7)**
+  - **[Mint NFT based on LensAPI Oracle data](./assets/LensAPI-Oracle.png)**
+  - **[Lens Treasure Hunt](https://bit.ly/3PWP5Y9)**
+- **[Get Randomness on-chain from drand.love and post with Telegram bot](https://bit.ly/3PXDyI4)**
+- **Trustless HTTPS requests w/ [TLSNotary](https://bit.ly/3rwD2Hw) integration**
+- **[Connect to Phat Contract Rust SDK](./assets/Oracle-Rust-SDK.png)** to access all features
+- **[Dynamic NFTs](https://bit.ly/3ZBJHNb)**
+
+## :books: Resources
+- **[What is an Oracle](https://bit.ly/3PE6ymF)**
+- **Frontend Templates**
+  - **[Scaffold ETH2](https://bit.ly/45ekZnt)**
+    - **[Phat Scaffold ETH2](https://bit.ly/46zZ23j)**
+  - **[Create ETH App](https://bit.ly/468I105)**
+  - **[Nexth Starter Kit](https://bit.ly/3EVS0di)**
+- **[Technical Design Doc](https://bit.ly/3ZAzdxE)**

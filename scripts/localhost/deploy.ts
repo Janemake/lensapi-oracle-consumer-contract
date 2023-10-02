@@ -6,15 +6,12 @@ async function main() {
 
   const [deployer] = await ethers.getSigners();
 
-  const consumerSC = process.env['POLYGON_CONSUMER_CONTRACT_ADDRESS'] || "";
-  const consumer = TestLensApiConsumerContract.attach(consumerSC);
-  await Promise.all([
-    consumer.deployed(),
-  ])
-
-  console.log('Pushing a request...');
-  await consumer.connect(deployer).request("0x01c567");
-  console.log('Done');
+  console.log("Deploying...");
+  const consumer = await TestLensApiConsumerContract.deploy(deployer.address);
+  await consumer.deployed();
+  console.log("Deployed", {
+    consumer: consumer.address,
+  });
 }
 
 // We recommend this pattern to be able to use async/await everywhere

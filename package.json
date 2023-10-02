@@ -15,7 +15,18 @@
     "test-push-malformed-request": "hardhat run --network mumbai ./scripts/mumbai/push-malformed-request.ts",
     "main-push-malformed-request": "hardhat run --network polygon ./scripts/polygon/push-malformed-request.ts",
     "test-verify": "hardhat verify --network mumbai --constructor-args mumbai.arguments.ts",
-    "main-verify": "hardhat verify --network polygon --constructor-args polygon.arguments.ts"
+    "main-verify": "hardhat verify --network polygon --constructor-args polygon.arguments.ts",
+    "build-function": "phat-fn build src/index.ts",
+    "run-function": "phat-fn run dist/index.js",
+    "localhost-node": "hardhat node",
+    "localhost-test": "hardhat test",
+    "localhost-deploy": "hardhat run --network localhost ./scripts/localhost/deploy.ts",
+    "localhost-watch": "phat-fn watch",
+    "localhost-push-request": "hardhat run --network localhost ./scripts/localhost/push-request.ts",
+    "test-deploy-function": "phat-fn upload --coreSettings=https://api-mumbai.lens.dev/",
+    "main-deploy-function": "phat-fn upload --mode=production --coreSettings=https://api.lens.dev/",
+    "test-update-function": "phat-fn update",
+    "main-update-function": "phat-fn update --mode=production"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
@@ -37,10 +48,15 @@
     "solidity-coverage": "^0.8.0",
     "ts-node": ">=8.0.0",
     "typechain": "^8.1.0",
-    "typescript": ">=4.5.0"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.2",
+    "@openzeppelin/contracts": "4.9.3",
+    "@phala/ethers": "^6.6.3",
+    "@phala/fn": "^0.1.6",
+    "@phala/pink-env": "^1.0.10",
+    "@phala/sdk": "^0.5.2",
+    "dedent": "^1.5.1",
     "dotenv": "^16.0.3"
   }
 }

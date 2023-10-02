@@ -14,3 +14,7 @@ typechain-types
 #Hardhat files
 cache
 artifacts
+
+
+dist
+polkadot-account.json
